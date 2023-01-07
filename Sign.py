@@ -30,3 +30,7 @@ signature = base64.b64encode(
         hashes.SHA256(),
     )
 )
+
+# Write the signature to a file
+with open('signature.sig', 'wb') as signature_file:
+    signature_file.write(signature)
