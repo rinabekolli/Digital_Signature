@@ -22,3 +22,15 @@ with open('private.key', 'wb') as key_file:
             encryption_algorithm=serialization.NoEncryption(),
         )
     )
+    
+    
+    # Save the public key to a file in PEM format
+with open('public.pem', 'wb') as key_file:
+    # Write the public key to the file in PEM format
+    key_file.write(
+        rsa_private_key.public_key().public_bytes(
+            encoding = serialization.Encoding.PEM,
+            format = serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+    )
+    
