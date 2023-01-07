@@ -17,3 +17,26 @@ with open('Sample_PDF.pdf', 'rb') as pdf_file:
 with open('signature.sig', 'rb') as signature_file:
     # Read the signature from the file and decode it from base64
     signature_bytes = base64.b64decode(signature_file.read())
+    
+    
+
+# Perform the verification.
+try:
+
+    public_key.verify(
+        signature_bytes,
+        payload_contents,
+        padding.PSS(
+            mgf = padding.MGF1(hashes.SHA256()),
+        
+        ),
+        hashes.SHA256(),
+ 
+    )
+
+    # If the verification is successful, print a success message.
+    print('SUCCESS!')
+
+except cryptography.exceptions.InvalidSignature as e:
+    # If the verification fails, print an error message.
+    print('ERROR: Payload and/or signature files failed verification!')
