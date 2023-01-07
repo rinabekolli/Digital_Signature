@@ -12,3 +12,21 @@ with open('private.key', 'rb') as key_file:
         password = None,
         backend = default_backend(),
     )
+    
+# Load the contents of the file to be signed
+with open('Sample_PDF.pdf', 'rb') as pdf_file:
+    pdf_contents = pdf_file.read()
+
+
+# Sign the PDF contents
+signature = base64.b64encode(
+    private_key.sign(
+        pdf_contents,
+        # Use PSS padding with MGF1 and SHA-256 hash function
+        padding.PSS(
+            mgf = padding.MGF1(hashes.SHA256()),
+            salt_length = padding.PSS.MAX_LENGTH,
+        ),
+        hashes.SHA256(),
+    )
+)
