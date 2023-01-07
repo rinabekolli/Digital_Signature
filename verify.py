@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_public_key
 # Load the public key
 with open('public.pem', 'rb') as key_file:
     # Read the public key from the file
-    public_key = load_pem_public_key(key_file.read())
+    public_key = load_pem_public_key(key_file.read(), default_backend())
 
 
 # Load the contents of the PDF file and the signature
@@ -20,23 +20,21 @@ with open('signature.sig', 'rb') as signature_file:
     
     
 
-# Perform the verification.
+# Perform the verification
 try:
-
+    # Verify the signature using PSS padding with MGF1 and SHA-256 hash function
     public_key.verify(
         signature_bytes,
-        payload_contents,
+        pdf_contents,
         padding.PSS(
             mgf = padding.MGF1(hashes.SHA256()),
-        
+            salt_length = padding.PSS.MAX_LENGTH,
         ),
         hashes.SHA256(),
  
     )
-
-    # If the verification is successful, print a success message.
-    print('SUCCESS!')
+    
+    print('Verification is done successfully!')
 
 except cryptography.exceptions.InvalidSignature as e:
-    # If the verification fails, print an error message.
-    print('ERROR: Payload and/or signature files failed verification!')
+    print('ERROR: PDF file content and/or signature files failed verification!')
